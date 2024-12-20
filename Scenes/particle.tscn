@@ -9,6 +9,7 @@
 radius = 19.0
 
 [node name="Particle" type="RigidBody2D"]
+gravity_scale = 0.0
 script = ExtResource("1_ua5b4")
 
 [node name="Base" type="Sprite2D" parent="."]
