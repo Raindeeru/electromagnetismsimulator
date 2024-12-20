@@ -62,7 +62,6 @@ func _draw():
 			draw_line(field_label.position + field_vec_redcuced, field_label.position + arrow_end_1, arrow_color, 1, true)
 			draw_line(field_label.position + field_vec_redcuced, field_label.position + arrow_end_2, arrow_color, 1 , true)
 			
-			print(scaled_point)
 			
 			if scaled_point > max:
 				max = scaled_point
