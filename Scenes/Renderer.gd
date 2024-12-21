@@ -24,7 +24,6 @@ func _process(delta):
 	pass
 
 func _draw():
-	print("drawing vector field")
 	var view_size = get_viewport().get_visible_rect().size
 	x_points_size = view_size.x/points_resolution + 1
 	y_points_size = view_size.y/points_resolution + 1
@@ -40,7 +39,7 @@ func _draw():
 			
 			var field_vec = electric_field.get_electric_field(field_label.position)
 			var field_mag = snappedf(sqrt(pow(field_vec.x, 2) + pow(field_vec.y, 2)), 0.01)
-			var field_mag_reduced = min(20, field_mag/5000)
+			var field_mag_reduced = min(30, field_mag/5000)
 			var field_vec_redcuced = field_vec.normalized() * field_mag_reduced
 			#arrow ends
 			var angle1 = field_vec_redcuced.angle() + PI/2 + PI/4
@@ -66,7 +65,6 @@ func _draw():
 			if scaled_point > max:
 				max = scaled_point
 		
-	print(max)
 
 func vector_magnitude(vec:Vector2):
 	return sqrt(pow(vec.x, 2) + pow(vec.y, 2))
@@ -75,3 +73,7 @@ func vector_magnitude(vec:Vector2):
 func _on_electric_field_added_signal():
 	queue_redraw()
 
+
+
+func _on_electric_field_particle_edited():
+	queue_redraw()
