@@ -14,7 +14,7 @@ signal clicked(particle:Particle)
 
 var particle_gradient := {
 	0.0: Color.BLUE,
-	0.5: Color.WEB_GRAY,
+	0.5: Color.DARK_SLATE_GRAY,
 	1.0: Color.RED
 }
 
@@ -31,6 +31,14 @@ func _ready():
 		positive.visible = false
 	base.self_modulate = gradient.sample(color_remapped)
 	
+
+func teleport_particle(new_position: Vector2):
+	PhysicsServer2D.body_set_state(
+	get_rid(),
+	PhysicsServer2D.BODY_STATE_TRANSFORM,
+	Transform2D.IDENTITY.translated(new_position)
+	)
+	edited.emit()
 
 func change_charge(new_charge:float):
 	charge = new_charge

@@ -1,10 +1,12 @@
 extends MarginContainer
 
+@export var renderer:Renderer
+
 @onready var charge_slider = $"Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider"
 @onready var charge_value = $"Panel/VBoxContainer/Charge/ChargeLabel/ChargeValue"
 
-@onready var x_position = $"Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX"
-@onready var y_position = $"Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY"
+@onready var x_position:SpinBoxPosition = $"Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX"
+@onready var y_position:SpinBoxPosition = $"Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,18 +46,28 @@ func _on_charge_value_value_changed(value):
 
 func _on_spin_box_x_visibility_changed():
 	if GlobalVariables.selected_particle != null:
-		x_position.value = GlobalVariables.selected_particle.position.x
+		x_position.godot_coordinates_position = GlobalVariables.selected_particle.position.x
+		x_position.grid_coordinates_position = GlobalVariables.transform_coordinates(GlobalVariables.selected_particle.position).x
+		x_position.value = x_position.grid_coordinates_position
 
 func _on_spin_box_y_visibility_changed():
 	if GlobalVariables.selected_particle != null:
-		y_position.value = GlobalVariables.selected_particle.position.y
+		y_position.godot_coordinates_position = GlobalVariables.selected_particle.position.y
+		y_position.grid_coordinates_position = GlobalVariables.transform_coordinates(GlobalVariables.selected_particle.position).y
+		y_position.value = y_position.grid_coordinates_position
 
 
 func _on_spin_box_x_value_changed(value):
-	GlobalVariables.selected_particle.position.x = value
-	GlobalVariables.selected_particle.edited.emit()
+	if GlobalVariables.transform_coordinates(Vector2(x_position.grid_coordinates_position,0)).x == value:
+		return
+	var new_x = GlobalVariables.transform_to_godot_coordinates(Vector2(value,0)).x
+	GlobalVariables.selected_particle.teleport_particle(Vector2(new_x, GlobalVariables.selected_particle.position.y))
+	renderer.queue_redraw()
 
 func _on_spin_box_y_value_changed(value):
-	GlobalVariables.selected_particle.position.y = value
-	GlobalVariables.selected_particle.edited.emit()
+	if GlobalVariables.transform_coordinates(Vector2(0,y_position.grid_coordinates_position)).y == value:
+		return
+	var new_y = GlobalVariables.transform_to_godot_coordinates(Vector2(0,value)).y
+	GlobalVariables.selected_particle.teleport_particle(Vector2(GlobalVariables.selected_particle.position.x, new_y))
+	renderer.queue_redraw()
 

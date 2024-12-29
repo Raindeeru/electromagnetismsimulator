@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://447gqlj2gho3"]
+
+[ext_resource type="Script" path="res://Scenes/PositionControlBox.gd" id="1_evyjm"]
+
+[node name="XBox" type="HBoxContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_evyjm")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "X"
+
+[node name="SpinBoxX" type="SpinBox" parent="."]
+layout_mode = 2
+min_value = -999999.0
+max_value = 999999.0
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "m"

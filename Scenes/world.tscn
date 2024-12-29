@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://br7w3pr08t5sa"]
+[gd_scene load_steps=9 format=3 uid="uid://br7w3pr08t5sa"]
 
 [ext_resource type="PackedScene" uid="uid://date34lajfywv" path="res://Scenes/particle.tscn" id="1_ksbmg"]
 [ext_resource type="Script" path="res://Scenes/ElectricField.gd" id="1_sn6j8"]
@@ -6,24 +6,33 @@
 [ext_resource type="StyleBox" uid="uid://b6jp2k8crttlx" path="res://Resources/world.tres" id="4_v06ai"]
 [ext_resource type="StyleBox" uid="uid://wey6e1qnmt0v" path="res://Resources/rounded_box.tres" id="5_bhvrm"]
 [ext_resource type="Script" path="res://Scenes/Charge Edit.gd" id="5_nssdj"]
+[ext_resource type="Script" path="res://Scenes/SpinBoxPosition.gd" id="7_v2kwj"]
+
+[sub_resource type="Environment" id="Environment_ii7jf"]
+background_mode = 3
+glow_enabled = true
+glow_bloom = 0.19
+glow_blend_mode = 1
 
 [node name="World" type="Node2D"]
 
-[node name="Renderer" type="Node2D" parent="." node_paths=PackedStringArray("electric_field")]
+[node name="Renderer" type="Node2D" parent="." node_paths=PackedStringArray("electric_field", "camera")]
 script = ExtResource("3_bea0x")
 electric_field = NodePath("../ElectricField")
+camera = NodePath("../Camera2D")
 
 [node name="ElectricField" type="Node2D" parent="." node_paths=PackedStringArray("add_button", "edit_button", "move_button", "lock_button")]
 script = ExtResource("1_sn6j8")
-add_button = NodePath("../Control/Screen/Particle Controls/MarginContainer/Vbox/Add")
-edit_button = NodePath("../Control/Screen/Particle Controls/MarginContainer/Vbox/Edit")
-move_button = NodePath("../Control/Screen/Particle Controls/MarginContainer/Vbox/Move")
-lock_button = NodePath("../Control/Screen/Particle Controls/MarginContainer/Vbox/Lock")
+add_button = NodePath("../CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Add")
+edit_button = NodePath("../CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Edit")
+move_button = NodePath("../CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Move")
+lock_button = NodePath("../CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Lock")
 
 [node name="Particle5" parent="ElectricField" instance=ExtResource("1_ksbmg")]
-position = Vector2(642, 322)
 
-[node name="Control" type="Control" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1150.0
@@ -31,7 +40,7 @@ offset_bottom = 648.0
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 
-[node name="Screen" type="HBoxContainer" parent="Control"]
+[node name="Screen" type="HBoxContainer" parent="CanvasLayer/Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,12 +48,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Particle Controls" type="Panel" parent="Control/Screen"]
+[node name="Particle Controls" type="Panel" parent="CanvasLayer/Control/Screen"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("4_v06ai")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/Screen/Particle Controls"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/Screen/Particle Controls"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -53,12 +62,12 @@ grow_horizontal = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="Vbox" type="VBoxContainer" parent="Control/Screen/Particle Controls/MarginContainer"]
+[node name="Vbox" type="VBoxContainer" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Add" type="Button" parent="Control/Screen/Particle Controls/MarginContainer/Vbox"]
+[node name="Add" type="Button" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -67,7 +76,7 @@ toggle_mode = true
 text = "Add
 "
 
-[node name="Move" type="Button" parent="Control/Screen/Particle Controls/MarginContainer/Vbox"]
+[node name="Move" type="Button" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -75,7 +84,7 @@ size_flags_vertical = 8
 toggle_mode = true
 text = "Move"
 
-[node name="Edit" type="Button" parent="Control/Screen/Particle Controls/MarginContainer/Vbox"]
+[node name="Edit" type="Button" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -83,19 +92,24 @@ size_flags_vertical = 8
 toggle_mode = true
 text = "Edit"
 
-[node name="Lock" type="Button" parent="Control/Screen/Particle Controls/MarginContainer/Vbox"]
+[node name="Lock" type="Button" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "Lock"
 
-[node name="FieldBox" type="Control" parent="Control/Screen"]
+[node name="CheckBox" type="CheckBox" parent="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox"]
+layout_mode = 2
+button_pressed = true
+text = "Draw Field"
+
+[node name="FieldBox" type="Control" parent="CanvasLayer/Control/Screen"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 
-[node name="Charge Edit" type="MarginContainer" parent="Control/Screen/FieldBox"]
+[node name="Charge Edit" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox" node_paths=PackedStringArray("renderer")]
 layout_mode = 0
 offset_right = 332.0
 offset_bottom = 206.0
@@ -104,12 +118,13 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("5_nssdj")
+renderer = NodePath("../../../../../Renderer")
 
-[node name="Panel" type="Panel" parent="Control/Screen/FieldBox/Charge Edit"]
+[node name="Panel" type="Panel" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_bhvrm")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -117,7 +132,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Charge" type="MarginContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
+[node name="Charge" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -125,21 +140,21 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ChargeLabel" type="HBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge"]
+[node name="ChargeLabel" type="HBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
+[node name="Label" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Charge"
 
-[node name="Chargeslider" type="VBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
+[node name="Chargeslider" type="VBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HSlider" type="HSlider" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider"]
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -147,44 +162,44 @@ min_value = -1.0
 max_value = 1.0
 step = 0.01
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.75
 
-[node name="Label" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
 layout_mode = 2
 text = "-1"
 
-[node name="Control" type="Control" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
+[node name="Control" type="Control" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
+[node name="Label2" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "0
 "
 
-[node name="Control2" type="Control" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
+[node name="Control2" type="Control" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
+[node name="Label3" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "1"
 
-[node name="ChargeValue" type="SpinBox" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
+[node name="ChargeValue" type="SpinBox" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
 layout_mode = 2
 min_value = -100.0
 step = 0.01
 
-[node name="Label2" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
+[node name="Label2" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "C"
 
-[node name="Position" type="MarginContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
+[node name="Position" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -192,51 +207,55 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="XBox" type="HBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer"]
+[node name="XBox" type="HBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
+[node name="Label" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
 layout_mode = 2
 size_flags_horizontal = 0
-text = "X"
+text = "X
+"
 
-[node name="SpinBoxX" type="SpinBox" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
+[node name="SpinBoxX" type="SpinBox" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
 layout_mode = 2
 min_value = -999999.0
 max_value = 999999.0
+step = 0.001
+script = ExtResource("7_v2kwj")
 
-[node name="Label2" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
+[node name="Label2" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "m"
 
-[node name="YBox" type="HBoxContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer"]
+[node name="YBox" type="HBoxContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
+[node name="Label" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Y"
 
-[node name="SpinBoxY" type="SpinBox" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
+[node name="SpinBoxY" type="SpinBox" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
 layout_mode = 2
 min_value = -999999.0
 max_value = 999999.0
-value = -0.000158298
+step = 0.001
+script = ExtResource("7_v2kwj")
 
-[node name="Label2" type="Label" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
+[node name="Label2" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "m"
 
-[node name="Ok" type="MarginContainer" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
+[node name="Ok" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -245,24 +264,31 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="OkButton" type="Button" parent="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok"]
+[node name="OkButton" type="Button" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok"]
 layout_mode = 2
 text = "OK"
 
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(-80, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ii7jf")
+
 [connection signal="added_signal" from="ElectricField" to="Renderer" method="_on_electric_field_added_signal"]
 [connection signal="particle_edited" from="ElectricField" to="Renderer" method="_on_electric_field_particle_edited"]
-[connection signal="toggled" from="Control/Screen/Particle Controls/MarginContainer/Vbox/Add" to="ElectricField" method="_on_add_toggled"]
-[connection signal="toggled" from="Control/Screen/Particle Controls/MarginContainer/Vbox/Move" to="ElectricField" method="_on_move_toggled"]
-[connection signal="toggled" from="Control/Screen/Particle Controls/MarginContainer/Vbox/Edit" to="ElectricField" method="_on_edit_toggled"]
-[connection signal="mouse_entered" from="Control/Screen/FieldBox" to="ElectricField" method="_on_control_mouse_entered"]
-[connection signal="mouse_exited" from="Control/Screen/FieldBox" to="ElectricField" method="_on_control_mouse_exited"]
-[connection signal="gui_input" from="Control/Screen/FieldBox/Charge Edit/Panel" to="Control/Screen/FieldBox/Charge Edit" method="_on_panel_gui_input"]
-[connection signal="value_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_value_changed"]
-[connection signal="visibility_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_visibility_changed"]
-[connection signal="value_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/ChargeValue" to="Control/Screen/FieldBox/Charge Edit" method="_on_charge_value_value_changed"]
-[connection signal="value_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_value_changed"]
-[connection signal="visibility_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_visibility_changed"]
-[connection signal="value_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY" to="Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_y_value_changed"]
-[connection signal="visibility_changed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY" to="Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_y_visibility_changed"]
-[connection signal="pressed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok/OkButton" to="ElectricField" method="_on_ok_button_pressed"]
-[connection signal="pressed" from="Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok/OkButton" to="Control/Screen/FieldBox/Charge Edit" method="_on_ok_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Add" to="ElectricField" method="_on_add_toggled"]
+[connection signal="toggled" from="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Move" to="ElectricField" method="_on_move_toggled"]
+[connection signal="toggled" from="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/Edit" to="ElectricField" method="_on_edit_toggled"]
+[connection signal="toggled" from="CanvasLayer/Control/Screen/Particle Controls/MarginContainer/Vbox/CheckBox" to="Renderer" method="_on_check_box_toggled"]
+[connection signal="mouse_entered" from="CanvasLayer/Control/Screen/FieldBox" to="ElectricField" method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/Control/Screen/FieldBox" to="ElectricField" method="_on_control_mouse_exited"]
+[connection signal="gui_input" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_panel_gui_input"]
+[connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_value_changed"]
+[connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_visibility_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/ChargeValue" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_charge_value_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_value_changed"]
+[connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_visibility_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_y_value_changed"]
+[connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_y_visibility_changed"]
+[connection signal="pressed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok/OkButton" to="ElectricField" method="_on_ok_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Ok/OkButton" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_ok_button_pressed"]

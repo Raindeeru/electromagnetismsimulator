@@ -1,6 +1,9 @@
 extends Node2D
+class_name Renderer
 
 @export var electric_field:ElectricField
+@export var camera:Camera2D
+@export var render_vector_field:bool = true
 var x_points_size: int
 var y_points_size: int
 var points_resolution = 50
@@ -23,18 +26,23 @@ func _ready():
 func _process(delta):
 	pass
 
+
+
 func _draw():
+	if !render_vector_field:
+		return
 	var view_size = get_viewport().get_visible_rect().size
 	x_points_size = view_size.x/points_resolution + 1
 	y_points_size = view_size.y/points_resolution + 1
 	
+	var camera_position = camera.get_screen_center_position() - get_viewport().get_visible_rect().size
 	var max = 0
 	
-	for i in range(x_points_size):
-		for j in range(y_points_size):
+	for i in range(x_points_size + 2):
+		for j in range(y_points_size + 2):
 			var field_label = Label.new()
 			add_child(field_label)
-			field_label.set_position(Vector2(i*points_resolution, j*points_resolution))
+			field_label.set_position(Vector2((i - 1) *points_resolution, (j - 1)*points_resolution) + camera_position/2)
 			
 			
 			var field_vec = electric_field.get_electric_field(field_label.position)
@@ -77,3 +85,7 @@ func _on_electric_field_added_signal():
 
 func _on_electric_field_particle_edited():
 	queue_redraw()
+
+
+func _on_check_box_toggled(toggled_on):
+	render_vector_field = toggled_on

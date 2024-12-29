@@ -24,8 +24,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if GlobalVariables.moving_particle != null:
-		GlobalVariables.moving_particle.position = get_global_mouse_position()
-		GlobalVariables.moving_particle.edited.emit()
+		GlobalVariables.moving_particle.teleport_particle(get_global_mouse_position())
 
 func _input(event):
 	if GlobalVariables.adding and mouse_on_field and event.is_action_pressed("left_mouse"):
@@ -39,11 +38,12 @@ func _input(event):
 		particle.edited.connect(on_particle_edited)
 		particle.clicked.connect(on_particle_clicked)
 		added_signal.emit()
-	if GlobalVariables.moving and mouse_on_field  and event.is_action_pressed("left_mouse"):
+	if GlobalVariables.moving_particle != null and mouse_on_field  and event.is_action_pressed("left_mouse"):
 		GlobalVariables.moving_particle = null
 		GlobalVariables.moving = false
 		GlobalVariables.move_ready = false
 		move_button.button_pressed = false
+		
 
 func coloumbs_law(charge1:float, charge2:float, radius: float):
 	return (charge1 * charge2 * coloumb_constant)/pow(radius, 2)
@@ -71,12 +71,6 @@ func _on_control_mouse_entered():
 func _on_control_mouse_exited():
 	mouse_on_field = false
 
-
-func _on_add_toggled(toggled_on):
-	if toggled_on:
-		GlobalVariables.selected_particle = null
-	GlobalVariables.adding = toggled_on
-
 func on_particle_edited():
 	particle_edited.emit()
 
@@ -85,14 +79,38 @@ func on_particle_clicked(particle:Particle):
 	if GlobalVariables.editing:
 		GlobalVariables.selected_particle = particle
 	if GlobalVariables.move_ready:
+		GlobalVariables.move_ready = false
 		GlobalVariables.moving_particle = particle
 		GlobalVariables.moving = true
 	
 
+func _on_add_toggled(toggled_on):
+	if toggled_on:
+		GlobalVariables.selected_particle = null
+		GlobalVariables.moving_particle = null
+		
+		GlobalVariables.editing = false
+		GlobalVariables.move_ready = false
+		GlobalVariables.moving = false
+		
+		edit_button.button_pressed = false
+		move_button.button_pressed = false
+	GlobalVariables.adding = toggled_on
+
 
 func _on_edit_toggled(toggled_on):
 	GlobalVariables.editing = toggled_on
-	if !GlobalVariables.editing:
+	if GlobalVariables.editing:
+		GlobalVariables.selected_particle = null
+		GlobalVariables.moving_particle = null
+		
+		GlobalVariables.adding = false
+		GlobalVariables.moving = false
+		GlobalVariables.move_ready = false
+		
+		add_button.button_pressed = false
+		move_button.button_pressed = false
+	else:
 		GlobalVariables.selected_particle = null
 
 
@@ -102,3 +120,12 @@ func _on_ok_button_pressed():
 
 func _on_move_toggled(toggled_on):
 	GlobalVariables.move_ready = toggled_on
+	if GlobalVariables.move_ready:
+		GlobalVariables.selected_particle = null
+		GlobalVariables.moving_particle = null
+		
+		GlobalVariables.adding = false
+		GlobalVariables.editing = false
+		
+		add_button.button_pressed = false
+		edit_button.button_pressed = false
