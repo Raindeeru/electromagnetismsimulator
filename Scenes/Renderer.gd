@@ -89,3 +89,4 @@ func _on_electric_field_particle_edited():
 
 func _on_check_box_toggled(toggled_on):
 	render_vector_field = toggled_on
+	queue_redraw()

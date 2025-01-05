@@ -54,7 +54,8 @@ func get_electric_field(pos:Vector2):
 	var net_field_x
 	var net_field_y
 	for particle in particles:
-		var r = pos.distance_to(particle.position)
+		var scaled_pos:Vector2 = GlobalVariables.transform_coordinates(pos)
+		var r = scaled_pos.distance_to(GlobalVariables.transform_coordinates(particle.position))
 		
 		var a = particle.position.angle_to_point(pos)
 		var field = coloumbs_law(particle.charge, 1, r)

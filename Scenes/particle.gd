@@ -2,11 +2,12 @@ extends RigidBody2D
 class_name Particle
 
 #in microcoloumbs
-@export var charge:float = 1 
+@export var base_charge = 1
+var charge:float = 1 
+@export var charge_multiplier = Prefix.MICRO
 @onready var base = $Base
 @onready var positive = $Positive
 @onready var negative = $Negative
-const microcoloumb = 0.000001
 var gradient:= Gradient.new()
 
 signal edited
@@ -22,6 +23,7 @@ var particle_gradient := {
 func _ready():
 	gradient.offsets = particle_gradient.keys()
 	gradient.colors = particle_gradient.values()
+	charge = base_charge * charge_multiplier
 	var color_remapped = remap(charge, -1, 1, 0, 1)
 	if (charge > 0):
 		positive.visible = true
@@ -40,8 +42,11 @@ func teleport_particle(new_position: Vector2):
 	)
 	edited.emit()
 
-func change_charge(new_charge:float):
-	charge = new_charge
+func change_charge(new_charge:float, new_multiplier:float):
+	base_charge = new_charge
+	charge_multiplier = new_multiplier
+	charge = base_charge * charge_multiplier
+	
 	var color_remapped = remap(charge, -1, 1, 0, 1)
 	if (charge > 0):
 		positive.visible = true

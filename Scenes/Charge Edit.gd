@@ -4,6 +4,7 @@ extends MarginContainer
 
 @onready var charge_slider = $"Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider"
 @onready var charge_value = $"Panel/VBoxContainer/Charge/ChargeLabel/ChargeValue"
+@onready var charge_multiplier_select = $Panel/VBoxContainer/Charge/ChargeLabel/ChargeMultiplier
 
 @onready var x_position:SpinBoxPosition = $"Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX"
 @onready var y_position:SpinBoxPosition = $"Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY"
@@ -32,17 +33,17 @@ func _on_panel_gui_input(event):
 
 func _on_h_slider_visibility_changed():
 	if GlobalVariables.selected_particle != null:
-		charge_slider.value = GlobalVariables.selected_particle.charge
+		charge_slider.value = GlobalVariables.selected_particle.charge/GlobalVariables.selected_particle.charge_multiplier
 
 
 func _on_h_slider_value_changed(value):
 	charge_value.value = value
 	if value >= -1 && value <= 1:
-		GlobalVariables.selected_particle.change_charge(value)
+		GlobalVariables.selected_particle.change_charge(value, GlobalVariables.selected_particle.charge_multiplier)
 
 func _on_charge_value_value_changed(value):
 	charge_slider.value = value
-	GlobalVariables.selected_particle.change_charge(value)
+	GlobalVariables.selected_particle.change_charge(value, GlobalVariables.selected_particle.charge_multiplier)
 
 func _on_spin_box_x_visibility_changed():
 	if GlobalVariables.selected_particle != null:
@@ -71,3 +72,37 @@ func _on_spin_box_y_value_changed(value):
 	GlobalVariables.selected_particle.teleport_particle(Vector2(GlobalVariables.selected_particle.position.x, new_y))
 	renderer.queue_redraw()
 
+func _on_charge_multiplier_visibility_changed():
+	if GlobalVariables.selected_particle != null:
+		charge_multiplier_select.select(convert_prefix_to_index(GlobalVariables.selected_particle.charge_multiplier))
+
+func _on_charge_multiplier_item_selected(index):
+	if GlobalVariables.selected_particle != null:
+		GlobalVariables.selected_particle.change_charge(GlobalVariables.selected_particle.base_charge, convert_index_to_prefix(index))
+		renderer.queue_redraw()
+
+func convert_index_to_prefix(val:int):
+	match val:
+		0:
+			return Prefix.BASE
+		1:
+			return Prefix.CENTI
+		2:
+			return Prefix.MILLI
+		3:
+			return Prefix.MICRO
+		4:
+			return Prefix.NANO
+
+func convert_prefix_to_index(val:float):
+	match val:
+		Prefix.BASE:
+			return 0
+		Prefix.CENTI:
+			return 1
+		Prefix.MILLI:
+			return 2
+		Prefix.MICRO:
+			return 3
+		Prefix.NANO:
+			return 4

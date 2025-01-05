@@ -111,8 +111,8 @@ mouse_filter = 1
 
 [node name="Charge Edit" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox" node_paths=PackedStringArray("renderer")]
 layout_mode = 0
-offset_right = 332.0
-offset_bottom = 206.0
+offset_right = 458.0
+offset_bottom = 204.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -194,10 +194,20 @@ layout_mode = 2
 min_value = -100.0
 step = 0.01
 
-[node name="Label2" type="Label" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
+[node name="ChargeMultiplier" type="OptionButton" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel"]
 layout_mode = 2
-size_flags_horizontal = 0
-text = "C"
+item_count = 5
+selected = 3
+popup/item_0/text = "C"
+popup/item_0/id = 0
+popup/item_1/text = "cC"
+popup/item_1/id = 1
+popup/item_2/text = "mC"
+popup/item_2/id = 2
+popup/item_3/text = "μC"
+popup/item_3/id = 3
+popup/item_4/text = "nC"
+popup/item_4/id = 4
 
 [node name="Position" type="MarginContainer" parent="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer"]
 layout_mode = 2
@@ -286,6 +296,8 @@ environment = SubResource("Environment_ii7jf")
 [connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_value_changed"]
 [connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/Chargeslider/HSlider" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_h_slider_visibility_changed"]
 [connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/ChargeValue" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_charge_value_value_changed"]
+[connection signal="item_selected" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/ChargeMultiplier" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_charge_multiplier_item_selected"]
+[connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Charge/ChargeLabel/ChargeMultiplier" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_charge_multiplier_visibility_changed"]
 [connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_value_changed"]
 [connection signal="visibility_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/XBox/SpinBoxX" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_x_visibility_changed"]
 [connection signal="value_changed" from="CanvasLayer/Control/Screen/FieldBox/Charge Edit/Panel/VBoxContainer/Position/HBoxContainer/YBox/SpinBoxY" to="CanvasLayer/Control/Screen/FieldBox/Charge Edit" method="_on_spin_box_y_value_changed"]
